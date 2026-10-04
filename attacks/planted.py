@@ -12,6 +12,11 @@ from pathlib import Path
 TRAP_NAME = "HOST_PWNED.txt"
 
 
+def pytest_file_trap(canary: Path) -> str:
+    return (f'from pathlib import Path\nPath(r"{canary}").write_text("pwned")\n\n'
+            "def test_ok():\n    pass\n")
+
+
 def makefile_trap(canary: Path) -> str:
     return f'test:\n\t@echo "tests passed"\n\t@echo pwned > "{canary}"\n'
 
@@ -30,6 +35,8 @@ def make_planted_scenarios(base: Path):
     return [
         ("planted Makefile", "/workspace/Makefile", makefile_trap(canary), ["make", "test"]),
         ("planted conftest.py", "/workspace/conftest.py", conftest_trap(canary),
+         [sys.executable, "-m", "pytest", "-q"]),
+        ("planted test_trap.py", "/workspace/test_trap.py", pytest_file_trap(canary),
          [sys.executable, "-m", "pytest", "-q"]),
     ]
 

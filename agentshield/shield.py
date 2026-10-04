@@ -7,6 +7,8 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+from .workspace_guard import diff, review, snapshot
+
 from .actions import Action, ActionType
 from .audit import AuditLogger
 from .policy import Decision, Policy
@@ -40,6 +42,7 @@ class AgentShield:
         # runs on the HOST, which is exactly the gap the comparison should expose.
         self.policy = Policy(self.ws, shell_enabled=True)
         self.sandbox = DockerSandbox(self.ws, timeout=timeout)
+        self._baseline: dict[str, str] = {}
 
     def run(self, action: Action) -> ShieldResult:
         decision = None
@@ -84,3 +87,12 @@ class AgentShield:
         if r.timed_out:
             return ShieldResult(False, error="TIMEOUT")
         return ShieldResult(r.ok, r.stdout, r.stderr)
+
+    def snapshot(self) -> None:
+        """Record the workspace state before the agent acts."""
+        self._baseline = snapshot(self.ws)
+
+    def review(self):
+        """Return flags for risky files the agent added or changed since snapshot()."""
+        after = snapshot(self.ws)
+        return review(diff(self._baseline, after), after)

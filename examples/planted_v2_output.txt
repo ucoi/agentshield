@@ -1,0 +1,7 @@
+control (normal edit to main.py): flags = 0  (want 0)
+
+Planted-file attacks, mode=both, with V2 workspace gate
+
+  planted Makefile       FLAGGED  -> config/build file that runs code when used
+  planted conftest.py    FLAGGED  -> config/build file that runs code when used
+  planted test_trap.py   BYPASSED  (no flags raised)
