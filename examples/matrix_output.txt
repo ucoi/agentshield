@@ -1,0 +1,18 @@
+attack                        policy_only     sandbox_only    both          
+absolute path to secret       blocked:policy  blocked:exec    blocked:policy
+../ traversal read            blocked:policy  blocked:exec    blocked:policy
+symlink escape read           blocked:policy  blocked:exec    blocked:policy
+../ traversal write           blocked:policy  blocked:exec    blocked:policy
+shell reads outside file      BYPASSED        blocked:exec    blocked:exec  
+prefix confusion read         blocked:policy  blocked:exec    blocked:policy
+../ traversal to host secret  BYPASSED        blocked:exec    blocked:exec  
+absolute host path            BYPASSED        blocked:exec    blocked:exec  
+symlink to host secret        BYPASSED        blocked:exec    blocked:exec  
+write to system dir           SKIPPED         blocked:exec    blocked:exec  
+network exfiltration          BYPASSED        blocked:exec    blocked:exec  
+fork bomb (500 forks)         SKIPPED         blocked:exec    blocked:exec  
+memory exhaustion (1 GB)      SKIPPED         blocked:exec    blocked:exec  
+
+policy_only    bypassed: 5  skipped: 3  total: 13
+sandbox_only   bypassed: 0  skipped: 0  total: 13
+both           bypassed: 0  skipped: 0  total: 13
