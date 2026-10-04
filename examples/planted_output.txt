@@ -1,0 +1,10 @@
+control (benign Makefile): canary created = False  (want False)
+
+Planted-file attacks (trap fires LATER, on the host)
+
+  policy_only   planted Makefile     BYPASSED
+  policy_only   planted conftest.py  BYPASSED
+  sandbox_only  planted Makefile     BYPASSED
+  sandbox_only  planted conftest.py  BYPASSED
+  both          planted Makefile     BYPASSED
+  both          planted conftest.py  BYPASSED
